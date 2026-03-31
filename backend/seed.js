@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const crypto = require('crypto');
 require('dotenv').config();
 
 if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
@@ -56,15 +57,41 @@ const sampleFoods = [
 async function seedDatabase() {
   console.log('🚀 Starting database seed...');
   const foodsRef = db.collection('foods');
+  const usersRef = db.collection('users');
   
   try {
-    for (const food of sampleFoods) {
-      await foodsRef.add({
-        ...food,
+    // 1. Seed Foods
+    const existingFoods = await foodsRef.get();
+    if (existingFoods.empty) {
+      for (const food of sampleFoods) {
+        await foodsRef.add({
+          ...food,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        console.log(`✅ Added Food: ${food.name}`);
+      }
+    } else {
+      console.log('ℹ️ Foods already exist, skipping food seed.');
+    }
+
+    // 2. Seed Admin User
+    const adminEmail = 'admin@smartfood.com';
+    const adminSnapshot = await usersRef.where('email', '==', adminEmail).get();
+    
+    if (adminSnapshot.empty) {
+      const hashedPassword = crypto.createHash('sha256').update('admin123').digest('hex');
+      await usersRef.add({
+        name: 'System Admin',
+        email: adminEmail,
+        password: hashedPassword,
+        isAdmin: true,
         createdAt: admin.firestore.FieldValue.serverTimestamp()
       });
-      console.log(`✅ Added: ${food.name}`);
+      console.log(`👤 Created Admin: ${adminEmail} (password: admin123)`);
+    } else {
+      console.log('ℹ️ Admin user already exists.');
     }
+
     console.log('✨ Seeding complete!');
     process.exit(0);
   } catch (err) {
