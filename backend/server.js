@@ -24,20 +24,24 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/foods', require('./routes/foods'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/admin', require('./routes/admin'));
-
-// API 404 Handler - Returns JSON instead of HTML
-app.use('/api', (req, res) => {
-  res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not implemented` });
-});
-
-// Serve static frontend files
+// Serve static frontend files first to allow dashboard.html etc to be found
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
+// API Routes Block
+const apiRouter = express.Router();
+apiRouter.use('/auth', require('./routes/auth'));
+apiRouter.use('/foods', require('./routes/foods'));
+apiRouter.use('/orders', require('./routes/orders'));
+apiRouter.use('/admin', require('./routes/admin'));
+
+// API 404 handler (Catch-all for missing API routes)
+apiRouter.use((req, res) => {
+  res.status(404).json({ error: 'Not Found', message: `API Route ${req.originalUrl} does not exist` });
+});
+
+app.use('/api', apiRouter);
+
+// Catch-all for HTML pages (SPA Fallback)
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
 });

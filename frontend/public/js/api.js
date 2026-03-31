@@ -47,6 +47,14 @@ const api = {
 
     try {
       const res = await fetch(`${API_BASE}${endpoint}`, options);
+      const isJson = res.headers.get('content-type')?.includes('application/json');
+      
+      if (!isJson) {
+        const text = await res.text();
+        console.error('Server returned non-JSON:', text.slice(0, 200));
+        throw new Error(`Server at ${API_BASE}${endpoint} sent HTML/Text instead of JSON. (Status: ${res.status})`);
+      }
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Something went wrong');
       return data;
