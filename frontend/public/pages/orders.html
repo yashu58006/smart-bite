@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBite — My Orders</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="orders-page-root">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand" onclick="window.location.href='/index.html'">
+      <span class="brand-icon">🍜</span>
+      SmartBite
+    </div>
+    <div class="nav-links">
+      <a href="/pages/dashboard.html" class="nav-link">Menu</a>
+      <a class="nav-link active">My Orders</a>
+    </div>
+    <div class="nav-right">
+      <span class="user-name" id="userName">User</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <main class="orders-page">
+    <div class="page-header">
+      <h1>My Orders 📦</h1>
+      <p>Track your current cravings and history.</p>
+    </div>
+
+    <!-- Loader -->
+    <div id="ordersLoader" class="loader-wrap">
+      <div class="loader"></div>
+      <p>Loading your orders...</p>
+    </div>
+
+    <!-- No Orders -->
+    <div id="noOrders" class="no-items hidden">
+      <span>🍕</span>
+      <p>You haven't placed any orders yet.</p>
+      <button class="btn-primary" onclick="window.location.href='/pages/dashboard.html'">Go to Menu</button>
+    </div>
+
+    <!-- Orders List -->
+    <div id="ordersList" class="orders-list">
+      <!-- Generated via JS -->
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/orders.js"></script>
+</body>
+</html>

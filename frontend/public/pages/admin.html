@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBite — Admin Portal</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+
+  <!-- Admin Login Screen -->
+  <div id="adminLoginScreen" class="admin-login-screen">
+    <div class="admin-login-box">
+      <div class="admin-brand">
+        <span class="brand-icon">🍜</span>
+        <span>SmartBite Admin</span>
+      </div>
+      <h2>Welcome Back</h2>
+      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem">Enter your credentials to access the portal</p>
+      
+      <div id="adminLoginError" class="alert alert-error hidden"></div>
+
+      <div class="input-group">
+        <label>Admin Email</label>
+        <input type="email" id="adminEmail" placeholder="admin@smartfood.com" />
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="adminPass" placeholder="••••••••" />
+      </div>
+      
+      <button class="btn-primary btn-full" onclick="adminLogin()">Login to Dashboard</button>
+      
+      <p class="demo-hint">🎯 Demo: <strong>admin@smartfood.com</strong> / <strong>admin123</strong></p>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="adminDashboard" class="admin-dashboard hidden">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">SmartBite CMS</div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link active" data-section="dashboard" onclick="showSection('dashboard')">
+          <span>📊</span> Dashboard
+        </a>
+        <a class="sidebar-link" data-section="foods" onclick="showSection('foods')">
+          <span>🍔</span> Menu Items
+        </a>
+        <a class="sidebar-link" data-section="orders" onclick="showSection('orders')">
+          <span>📦</span> Orders
+        </a>
+        <a class="sidebar-link" data-section="users" onclick="showSection('users')">
+          <span>👥</span> Users
+        </a>
+      </nav>
+      <div class="sidebar-logout">
+        <button class="btn-logout btn-full" onclick="adminLogout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <h2 id="sectionTitle">Dashboard</h2>
+        <div class="admin-info">Admin Mode 🟢</div>
+      </header>
+
+      <!-- Dashboard Statistics -->
+      <section id="section-dashboard" class="admin-section">
+        <div class="stats-grid">
+          <div class="stat-card orange">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info"><h4 id="statUsers">0</h4><p>Total Users</p></div>
+          </div>
+          <div class="stat-card teal">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info"><h4 id="statOrders">0</h4><p>Total Orders</p></div>
+          </div>
+          <div class="stat-card coral">
+            <div class="stat-icon">🍔</div>
+            <div class="stat-info"><h4 id="statFoods">0</h4><p>Total Dishes</p></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info"><h4 id="statRevenue">₹0</h4><p>Total Revenue</p></div>
+          </div>
+        </div>
+
+        <div class="recent-orders-panel">
+          <h3>Recent Activity</h3>
+          <div id="recentOrdersList" class="recent-orders-list">
+            <!-- Generated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Menu Items Management -->
+      <section id="section-foods" class="admin-section hidden">
+        <div class="section-toolbar">
+          <h3>Menu Inventory</h3>
+          <button class="btn-primary" onclick="openFoodModal()">+ Add New Item</button>
+        </div>
+        <div class="foods-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Dish Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="foodsTableBody">
+              <!-- Generated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Orders Management -->
+      <section id="section-orders" class="admin-section hidden">
+        <div class="section-toolbar">
+          <h3>Customer Orders</h3>
+          <div class="filter-group">
+            <select id="orderStatusFilter" onchange="filterOrders()">
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Preparing">Preparing</option>
+              <option value="Out for Delivery">Out for Delivery</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="orders-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Update Status</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Generated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Users Management -->
+      <section id="section-users" class="admin-section hidden">
+        <div class="section-toolbar">
+          <h3>User Directory</h3>
+        </div>
+        <div class="orders-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User Name</th>
+                <th>Email Address</th>
+                <th>Joined Date</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <!-- Generated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Food Add/Edit Modal -->
+  <div class="modal-overlay" id="foodModal">
+    <div class="modal food-modal">
+      <h3 id="foodModalTitle">Add Food Item</h3>
+      <div id="foodFormError" class="alert alert-error hidden"></div>
+      
+      <input type="hidden" id="editFoodId" />
+      
+      <div class="img-upload-section">
+        <div class="img-preview-wrap">
+          <div id="imgPreview" class="img-preview">
+            <span class="upload-icon">📷</span>
+            <p>Click to upload image</p>
+            <small>JPG, PNG, WEBP — max 5MB</small>
+          </div>
+          <button id="imgRemoveBtn" class="img-remove-btn hidden" onclick="removeImage()">Remove</button>
+        </div>
+        <input type="file" id="foodImageFile" class="hidden" accept="image/*" onchange="handleImageSelect(event)" />
+        <p class="img-hint">Or paste an image URL below</p>
+        <input type="text" id="foodImageUrl" onblur="handleUrlInput()" placeholder="https://example.com/image.jpg" 
+          style="width:100%;padding:0.75rem;border-radius:8px;border:1px solid var(--border);background:var(--bg-3);color:white;" />
+      </div>
+
+      <div class="form-grid">
+        <div class="input-group full-width">
+          <label>Dish Name</label>
+          <input type="text" id="foodName" placeholder="e.g. Classic Margherita" />
+        </div>
+        <div class="input-group">
+          <label>Price (₹)</label>
+          <input type="number" id="foodPrice" placeholder="299" />
+        </div>
+        <div class="input-group">
+          <label>Category</label>
+          <select id="foodCategory">
+            <option>Main Course</option>
+            <option>Pizza</option>
+            <option>Burgers</option>
+            <option>Pasta</option>
+            <option>Salads</option>
+            <option>Starters</option>
+            <option>Desserts</option>
+            <option>Beverages</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Emoji Icon</label>
+          <input type="text" id="foodImage" placeholder="🍕" />
+        </div>
+        <div class="input-group full-width">
+          <label>Description</label>
+          <textarea id="foodDescription" rows="2" placeholder="Describe the deliciousness..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeFoodModal()">Cancel</button>
+        <button class="btn-primary" id="saveFoodBtn" onclick="saveFoodItem()">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

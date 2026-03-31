@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBite — Dashboard</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand" onclick="window.location.href='/index.html'">
+      <span class="brand-icon">🍜</span>
+      SmartBite
+    </div>
+    <div class="nav-links">
+      <a class="nav-link active">Menu</a>
+      <a href="/pages/orders.html" class="nav-link">My Orders</a>
+    </div>
+    <div class="nav-right">
+      <div class="cart-btn" onclick="openCart()">
+        <span>🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+      <span class="user-name" id="userName">User</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+      <button class="hamburger" onclick="toggleMobileNav()">☰</button>
+    </div>
+  </nav>
+
+  <!-- Hero Banner -->
+  <header class="hero-banner">
+    <div class="hero-content">
+      <h1>Hello, <span id="heroName">Foodie</span></h1>
+      <p>What are we eating today? Choose from the best flavors in town.</p>
+      
+      <div class="hero-stats">
+        <div class="stat"><span>30min</span> Average Delivery</div>
+        <div class="stat"><span>4.9★</span> Top Rated Kitchen</div>
+        <div class="stat"><span>FREE</span> Orders over ₹500</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search for dishes, cuisines..." oninput="handleSearch()" />
+      <button id="clearSearch" class="clear-search" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="category-filters" id="categoryFilters">
+      <!-- Generated via JS -->
+    </div>
+  </div>
+
+  <!-- Main Menu -->
+  <main class="menu-section">
+    <div class="section-header">
+      <h2 id="menuTitle">All Items</h2>
+      <span class="item-count" id="itemCount">(0 items)</span>
+    </div>
+
+    <div id="menuLoader" class="loader-wrap">
+      <div class="loader"></div>
+      <p>Fetching deliciousness...</p>
+    </div>
+
+    <!-- No Items State -->
+    <div id="noItems" class="no-items hidden">
+      <span>🍽️</span>
+      <p>No matches found for your search.</p>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <!-- Generated via JS -->
+    </div>
+  </main>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="close-cart" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <!-- Generated via JS -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Subtotal</span>
+        <span class="cart-total-price" id="cartTotal">₹0</span>
+      </div>
+      <button class="btn-primary btn-full" onclick="openPayment()">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+      <h3>Checkout 💳</h3>
+      <div class="order-summary" id="orderSummary">
+        <!-- Generated via JS -->
+      </div>
+      
+      <div class="input-group">
+        <label>Delivery Address</label>
+        <textarea id="deliveryAddress" placeholder="Enter your full shipping address..." rows="3"></textarea>
+      </div>
+
+      <div class="payment-methods">
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin:0.5rem 0;">Select Payment Method:</p>
+        <label class="pay-opt">
+          <input type="radio" name="pay" checked />
+          <span>💵 Cash on Delivery</span>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="pay" disabled />
+          <span style="opacity:0.5">💳 Cards / UPI (Coming Soon)</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closePayment()">Cancel</button>
+        <button class="btn-primary" id="payBtn" onclick="processPayment()">Place Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal success-modal">
+      <div class="success-animation">🎉</div>
+      <h3>Order Confirmed!</h3>
+      <p>Your meal is being prepared with love.</p>
+      <div class="order-id-text">Order ID: <strong id="confirmedOrderId">#XXXX</strong></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeSuccess()">Close</button>
+        <button class="btn-primary" onclick="goToOrders()">Track Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
