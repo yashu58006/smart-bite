@@ -158,7 +158,10 @@ async function loadFoods() {
   try {
     allFoodItems = await api.get('/foods');
     renderFoodsTable();
-  } catch (err) { console.error('Load foods error:', err); }
+  } catch (err) { 
+    console.error('Load foods error:', err);
+    alert('❌ Failed to load Menu. Please ensure the server is running and database is seeded.');
+  }
 }
 
 function renderFoodsTable() {
