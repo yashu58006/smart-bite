@@ -30,7 +30,7 @@ app.use('/api/auth', require('./routes/auth'));
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
 });
 
