@@ -26,6 +26,14 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/foods', require('./routes/foods'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/admin', require('./routes/admin'));
+
+// API 404 Handler - Returns JSON instead of HTML
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'Not Found', message: `Route ${req.originalUrl} not implemented` });
+});
 
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, '../frontend/public')));
